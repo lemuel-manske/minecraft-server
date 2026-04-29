@@ -1,0 +1,79 @@
+#!/bin/bash
+exec > /var/log/setup.log 2>&1
+set -euxo pipefail
+
+apt-get update
+apt-get install -y openjdk-17-jdk wget unzip tmux
+
+BASE="/home/ubuntu/mc"
+
+mkdir -p "$BASE/base" \
+  "$BASE/state/world" \
+  "$BASE/state/config" \
+  "$BASE/state/serverconfig" \
+  "$BASE/state/kubejs" \
+  "$BASE/state/customnpcs" \
+  "$BASE/state/ftbquests"
+
+cd "$BASE/base"
+
+wget -O forge-installer.jar "${forge_url}"
+
+echo "${forge_sha256}  forge-installer.jar" | sha256sum -c -
+
+java -jar forge-installer.jar --installServer
+
+rm forge-installer.jar
+
+echo "eula=true" > eula.txt
+
+ln -sfn ../state/world        "$BASE/base/world"
+ln -sfn ../state/config       "$BASE/base/config"
+ln -sfn ../state/serverconfig "$BASE/base/serverconfig"
+ln -sfn ../state/kubejs       "$BASE/base/kubejs"
+ln -sfn ../state/customnpcs   "$BASE/base/customnpcs"
+ln -sfn ../state/ftbquests    "$BASE/base/ftbquests"
+
+cat > "$BASE/start.sh" <<'STARTSCRIPT'
+#!/bin/bash
+if ! tmux has-session -t mc 2>/dev/null; then
+  tmux new-session -d -s mc "cd /home/ubuntu/mc/base && ./run.sh"
+fi
+tail -f /dev/null
+STARTSCRIPT
+
+chmod +x "$BASE/start.sh"
+
+cat > "$BASE/mc-stop.sh" <<'STOPSCRIPT'
+#!/bin/bash
+/usr/bin/tmux send-keys -t mc "save-all" C-m
+sleep 10
+/usr/bin/tmux send-keys -t mc "stop" C-m
+STOPSCRIPT
+
+chmod +x "$BASE/mc-stop.sh"
+
+cat > /etc/systemd/system/minecraft.service <<'UNIT'
+[Unit]
+Description=Minecraft Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/mc/base
+ExecStart=/home/ubuntu/mc/start.sh
+ExecStop=/home/ubuntu/mc/mc-stop.sh
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+chown -R ubuntu:ubuntu "$BASE"
+
+systemctl daemon-reload
+systemctl enable minecraft
+
+touch "$BASE/.setup-complete"
