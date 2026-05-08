@@ -14,16 +14,16 @@ Why not? I wanted to learn Terraform and AWS, and what better way to do it than 
 make init
 ```
 
-### 2. Build CLI
+### 2. Build & Install CLI
 
 ```bash
-make build
+make install
 ```
 
 ### 3. Run CLI
 
 ```bash
-mc
+mc --help
 ```
 
 ## How it works?
@@ -32,7 +32,8 @@ mc
 
 Modpacks should be written to `./modpacks` directory, with the following structure:
 
-```modpacks/
+```markdown
+modpacks/
 ├── my-mockpack/
 │   ├── mods/
 │   │   ├── mod1.jar
@@ -48,6 +49,6 @@ Modpacks should be written to `./modpacks` directory, with the following structu
 
 Backups are written to `./backups`.
 
-## Forge curated modpacks
+## Forge curated modpacks examples
 
 - [DeceasedCraft](https://www.curseforge.com/minecraft/modpacks/deceasedcraft/download/7623174)
