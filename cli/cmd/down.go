@@ -10,15 +10,22 @@ import (
 
 func downCmd(app *App) *cobra.Command {
 	return &cobra.Command{
-		Use:   "down",
+		Use:   "down <profile>",
+		Args:  cobra.ExactArgs(1),
 		Short: "Stop the server and destroy infrastructure",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runDown(cmd.Context(), app)
+			return runDown(cmd.Context(), app, args[0])
 		},
 	}
 }
 
-func runDown(ctx context.Context, app *App) error {
+func runDown(ctx context.Context, app *App, profileName string) error {
+	profile, err := app.Config.GetProfile(profileName)
+	if err != nil {
+		return err
+	}
+	vars := buildTFVars(app, profileName, profile)
+
 	inst, err := app.EC2.GetInstance(ctx, app.Config.InstanceName)
 	if err != nil {
 		return fmt.Errorf("no server found: %w", err)
@@ -34,7 +41,7 @@ func runDown(ctx context.Context, app *App) error {
 
 	s := newSpinner(" Destroying infrastructure...")
 	s.Start()
-	if err := app.TF.Destroy(ctx); err != nil {
+	if err := app.TF.Destroy(ctx, vars); err != nil {
 		s.Stop()
 		return fmt.Errorf("terraform destroy: %w", err)
 	}
