@@ -18,12 +18,29 @@ variable "allowed_cidrs" {
   type = list(string)
 }
 
+variable "loader" {
+  type    = string
+  default = "forge"
+}
+
+variable "minecraft_version" {
+  type    = string
+  default = ""
+}
+
+variable "fabric_loader_version" {
+  type    = string
+  default = ""
+}
+
 variable "forge_url" {
-  type = string
+  type    = string
+  default = ""
 }
 
 variable "forge_sha256" {
-  type = string
+  type    = string
+  default = ""
 }
 
 variable "profile_name" {
