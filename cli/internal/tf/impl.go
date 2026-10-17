@@ -31,8 +31,12 @@ func (c *TFImpl) Apply(ctx context.Context, vars []string) error {
 	return c.run(ctx, args...)
 }
 
-func (c *TFImpl) Destroy(ctx context.Context) error {
-	return c.run(ctx, "destroy", "-auto-approve")
+func (c *TFImpl) Destroy(ctx context.Context, vars []string) error {
+	args := []string{"destroy", "-auto-approve"}
+	for _, v := range vars {
+		args = append(args, "-var="+v)
+	}
+	return c.run(ctx, args...)
 }
 
 func (c *TFImpl) Output(ctx context.Context, key string) (string, error) {
