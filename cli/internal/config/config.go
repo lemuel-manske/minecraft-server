@@ -12,7 +12,10 @@ type Profile struct {
 	WorldDir        string `yaml:"world_dir"`
 	BackupDir       string `yaml:"backup_dir"`
 	BackupKeep      int    `yaml:"backup_keep"`
-	ForgeURL        string `yaml:"forge_url"`
+	Loader              string `yaml:"loader"`
+	MinecraftVersion    string `yaml:"minecraft_version"`
+	FabricLoaderVersion string `yaml:"fabric_loader_version"`
+	ForgeURL            string `yaml:"forge_url"`
 	ForgeSHA256     string `yaml:"forge_sha256"`
 }
 
