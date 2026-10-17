@@ -52,3 +52,5 @@ Backups are written to `./backups`.
 ## Forge curated modpacks examples
 
 - [DeceasedCraft](https://www.curseforge.com/minecraft/modpacks/deceasedcraft/download/7623174)
+- [ATM10](https://www.curseforge.com/minecraft/modpacks/all-the-mods-10/download/9190182)
+- [ATM10 - To The Sky](https://www.curseforge.com/minecraft/modpacks/all-the-mods-10-sky/download/9186797)
