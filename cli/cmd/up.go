@@ -69,6 +69,10 @@ func runUp(ctx context.Context, app *App, profileName string, verbose bool) erro
 	}
 	s.Stop()
 
+	if _, err := sshClient.Output("for i in $(seq 1 90); do test -f /home/ubuntu/mc/.setup-complete && exit 0; sleep 2; done; exit 1"); err != nil {
+		return fmt.Errorf("server setup did not complete: %w", err)
+	}
+
 	s = newSpinner(" Uploading modpack...")
 	s.Start()
 	if err := sshClient.UploadTar(profile.ModpackDir, "/home/ubuntu/mc"); err != nil {
