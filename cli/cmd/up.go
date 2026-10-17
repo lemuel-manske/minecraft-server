@@ -75,7 +75,7 @@ func runUp(ctx context.Context, app *App, profileName string, verbose bool) erro
 
 	s = newSpinner(" Uploading modpack...")
 	s.Start()
-	if err := sshClient.UploadTar(profile.ModpackDir, "/home/ubuntu/mc"); err != nil {
+	if err := sshClient.UploadTar(profile.ModpackDir, "/home/ubuntu/mc/pack"); err != nil {
 		s.Stop()
 		return fmt.Errorf("upload modpack: %w", err)
 	}
@@ -85,7 +85,7 @@ func runUp(ctx context.Context, app *App, profileName string, verbose bool) erro
 	props := filepath.Join(profile.ModpackDir, "server.properties")
 	s = newSpinner(" Uploading server config...")
 	s.Start()
-	if err := sshClient.UploadFile(props, "/home/ubuntu/mc/server.properties"); err != nil {
+	if err := sshClient.UploadFile(props, "/home/ubuntu/mc/pack/server.properties"); err != nil {
 		s.Stop()
 		return fmt.Errorf("upload server.properties: %w", err)
 	}
