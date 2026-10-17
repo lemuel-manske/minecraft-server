@@ -8,15 +8,15 @@ import (
 )
 
 type Profile struct {
-	ModpackDir      string `yaml:"modpack_dir"`
-	WorldDir        string `yaml:"world_dir"`
-	BackupDir       string `yaml:"backup_dir"`
-	BackupKeep      int    `yaml:"backup_keep"`
+	ModpackDir          string `yaml:"modpack_dir"`
+	WorldDir            string `yaml:"world_dir"`
+	BackupDir           string `yaml:"backup_dir"`
+	BackupKeep          int    `yaml:"backup_keep"`
 	Loader              string `yaml:"loader"`
 	MinecraftVersion    string `yaml:"minecraft_version"`
 	FabricLoaderVersion string `yaml:"fabric_loader_version"`
 	ForgeURL            string `yaml:"forge_url"`
-	ForgeSHA256     string `yaml:"forge_sha256"`
+	ForgeSHA256         string `yaml:"forge_sha256"`
 }
 
 type Config struct {
