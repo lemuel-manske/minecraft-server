@@ -7,7 +7,7 @@ variable "region" {
 }
 
 variable "instance_type" {
-  default = "m6i.large"
+  default = "m7i.xlarge"
 }
 
 variable "operator_cidr" {
