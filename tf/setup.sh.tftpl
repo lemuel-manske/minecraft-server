@@ -7,7 +7,7 @@ apt-get install -y openjdk-17-jdk wget unzip tmux
 
 BASE="/home/ubuntu/mc"
 
-mkdir -p "$BASE/base" "$BASE/mods" \
+mkdir -p "$BASE/base" \
   "$BASE/state/world" \
   "$BASE/state/config" \
   "$BASE/state/serverconfig" \
@@ -17,42 +17,28 @@ mkdir -p "$BASE/base" "$BASE/mods" \
 
 cd "$BASE/base"
 
-case "${loader}" in
-  forge)
-    wget -O forge-installer.jar "${forge_url}"
-    echo "${forge_sha256}  forge-installer.jar" | sha256sum -c -
-    java -jar forge-installer.jar --installServer
-    rm forge-installer.jar
-    ;;
-  fabric)
-    wget -O fabric-installer.jar "https://maven.fabricmc.net/net/fabricmc/fabric-installer/1.1.0/fabric-installer-1.1.0.jar"
-    java -jar fabric-installer.jar server -mcversion "${minecraft_version}" -loader "${fabric_loader_version}" -downloadMinecraft
-    rm fabric-installer.jar
-    ;;
-  *)
-    echo "Unsupported loader: ${loader}" >&2
-    exit 1
-    ;;
-esac
+wget -O forge-installer.jar "${forge_url}"
+
+echo "${forge_sha256}  forge-installer.jar" | sha256sum -c -
+
+java -jar forge-installer.jar --installServer
+
+rm forge-installer.jar
 
 echo "eula=true" > eula.txt
+ln -sfn ../server.properties "$BASE/base/server.properties"
 
-ln -sfn ../mods "$BASE/base/mods"
 ln -sfn ../state/world        "$BASE/base/world"
-ln -sfn ../state/config       "$BASE/base/config"
-ln -sfn ../state/serverconfig "$BASE/base/serverconfig"
-ln -sfn ../state/kubejs       "$BASE/base/kubejs"
-ln -sfn ../state/customnpcs   "$BASE/base/customnpcs"
-ln -sfn ../state/ftbquests    "$BASE/base/ftbquests"
+ln -sfn ../config             "$BASE/base/config"
+ln -sfn ../serverconfig       "$BASE/base/serverconfig"
+ln -sfn ../kubejs             "$BASE/base/kubejs"
+ln -sfn ../customnpcs         "$BASE/base/customnpcs"
+ln -sfn ../ftbquests          "$BASE/base/ftbquests"
 
 cat > "$BASE/start.sh" <<'STARTSCRIPT'
 #!/bin/bash
 if ! tmux has-session -t mc 2>/dev/null; then
-  if [ -f /home/ubuntu/mc/base/fabric-server-launch.jar ]; then
-    tmux new-session -d -s mc "cd /home/ubuntu/mc/base && java -Xms4G -Xmx8G -jar fabric-server-launch.jar nogui"
-  else
-    tmux new-session -d -s mc "cd /home/ubuntu/mc/base && ./run.sh"
-  fi
+  tmux new-session -d -s mc "cd /home/ubuntu/mc/base && ./run.sh"
 fi
 tail -f /dev/null
 STARTSCRIPT
