@@ -48,8 +48,11 @@ resource "aws_instance" "mc" {
   }
 
   user_data = templatefile("setup.sh.tftpl", {
-    forge_url    = var.forge_url
-    forge_sha256 = var.forge_sha256
+    loader                = var.loader
+    minecraft_version     = var.minecraft_version
+    fabric_loader_version = var.fabric_loader_version
+    forge_url             = var.forge_url
+    forge_sha256          = var.forge_sha256
   })
 
   tags = {
