@@ -9,6 +9,9 @@ test:
 build:
 	cd cli && go build -o ../mc .
 
+fmt:
+	cd cli && go fmt ./...
+
 install: build
 	sudo cp mc /usr/local/bin/mc
 	rm mc
