@@ -10,6 +10,7 @@ import (
 
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
+	"github.com/lkmliz/mc-server/cli/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -41,7 +42,7 @@ func runUp(ctx context.Context, app *App, profileName string, verbose bool) erro
 		app.TF.SetVerbose(true)
 	}
 
-	vars := buildTFVars(app, profileName, profile.ForgeURL, profile.ForgeSHA256)
+	vars := buildTFVars(app, profileName, profile)
 
 	s := newSpinner(" Provisioning infrastructure...")
 	if !verbose {
@@ -91,6 +92,10 @@ func runUp(ctx context.Context, app *App, profileName string, verbose bool) erro
 		return fmt.Errorf("start minecraft: %w", err)
 	}
 
+	if _, err := sshClient.Output("for i in $(seq 1 60); do ss -lnt | grep -q \":25565 \" && exit 0; sleep 2; done; exit 1"); err != nil {
+		return fmt.Errorf("minecraft did not open port 25565: %w", err)
+	}
+
 	color.Green("Server is up at %s:25565", ip)
 	return nil
 }
@@ -101,7 +106,11 @@ func newSpinner(suffix string) *spinner.Spinner {
 	return s
 }
 
-func buildTFVars(app *App, profileName, forgeURL, forgeSHA256 string) []string {
+func buildTFVars(app *App, profileName string, profile config.Profile) []string {
+	loader := profile.Loader
+	if loader == "" {
+		loader = "forge"
+	}
 	quoted := make([]string, len(app.Config.AllowedCIDRs))
 	for i, c := range app.Config.AllowedCIDRs {
 		quoted[i] = `"` + c + `"`
@@ -110,8 +119,11 @@ func buildTFVars(app *App, profileName, forgeURL, forgeSHA256 string) []string {
 	return []string{
 		"operator_cidr=" + app.Config.OperatorCIDR,
 		"allowed_cidrs=[" + strings.Join(quoted, ",") + "]",
-		"forge_url=" + forgeURL,
-		"forge_sha256=" + forgeSHA256,
+		"loader=" + loader,
+		"minecraft_version=" + profile.MinecraftVersion,
+		"fabric_loader_version=" + profile.FabricLoaderVersion,
+		"forge_url=" + profile.ForgeURL,
+		"forge_sha256=" + profile.ForgeSHA256,
 		"profile_name=" + profileName,
 	}
 }
