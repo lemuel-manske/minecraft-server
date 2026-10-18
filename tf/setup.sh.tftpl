@@ -22,6 +22,8 @@ case "${loader}" in
     wget -O forge-installer.jar "${forge_url}"
     echo "${forge_sha256}  forge-installer.jar" | sha256sum -c -
     java -jar forge-installer.jar --installServer
+    cp run.sh "$BASE/bin/forge-run.sh"
+    chmod +x "$BASE/bin/forge-run.sh"
     rm forge-installer.jar
     ;;
   fabric)
@@ -44,7 +46,7 @@ if ! tmux has-session -t mc 2>/dev/null; then
   if [ -f /home/ubuntu/mc/base/fabric-server-launch.jar ]; then
     tmux new-session -d -s mc "cd /home/ubuntu/mc/base && java -Xms4G -Xmx8G -jar fabric-server-launch.jar nogui"
   else
-    tmux new-session -d -s mc "cd /home/ubuntu/mc/base && ./run.sh"
+    tmux new-session -d -s mc "cd /home/ubuntu/mc/base && /home/ubuntu/mc/bin/forge-run.sh nogui"
   fi
 fi
 tail -f /dev/null
