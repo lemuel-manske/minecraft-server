@@ -18,6 +18,11 @@ variable "allowed_cidrs" {
   type = list(string)
 }
 
+variable "java_version" {
+  type    = number
+  default = 17
+}
+
 variable "loader" {
   type    = string
   default = "forge"
