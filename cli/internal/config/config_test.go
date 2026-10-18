@@ -113,3 +113,46 @@ func loadProfile(t *testing.T) config.Profile {
 
 	return p
 }
+
+func TestGetProfile_RuntimeForge(t *testing.T) {
+	cfg := &config.Config{Profiles: map[string]config.Profile{
+		"forge": {
+			Runtime: config.LoaderConfig{
+				Type: "forge",
+				InstallerURL: "https://example.com/forge.jar",
+				InstallerSHA256: "checksum",
+			},
+		},
+	}}
+
+	p, err := cfg.GetProfile("forge")
+	require.NoError(t, err)
+	assert.Equal(t, config.LoaderForge, p.Loader)
+	assert.Equal(t, "https://example.com/forge.jar", p.ForgeURL)
+	assert.Equal(t, "checksum", p.ForgeSHA256)
+	assert.Equal(t, config.DefaultJavaVersion, p.JavaVersion)
+}
+
+func TestGetProfile_RuntimeFabric(t *testing.T) {
+	cfg := &config.Config{Profiles: map[string]config.Profile{
+		"fabric": {
+			Runtime: config.LoaderConfig{
+				Type: "fabric",
+				MinecraftVersion: "1.20.1",
+				Version: "0.19.3",
+			},
+		},
+	}}
+
+	p, err := cfg.GetProfile("fabric")
+	require.NoError(t, err)
+	assert.Equal(t, config.LoaderFabric, p.Loader)
+	assert.Equal(t, "1.20.1", p.MinecraftVersion)
+	assert.Equal(t, "0.19.3", p.FabricLoaderVersion)
+}
+
+func TestGetProfile_LegacyForge(t *testing.T) {
+	p := loadProfile(t)
+	assert.Equal(t, config.LoaderForge, p.Loader)
+	assert.Equal(t, "https://example.com/forge.jar", p.ForgeURL)
+}
