@@ -50,5 +50,6 @@ func (c *Config) GetProfile(name string) (Profile, error) {
 	if !ok {
 		return Profile{}, fmt.Errorf("profile %q not found", name)
 	}
+
 	return p, nil
 }

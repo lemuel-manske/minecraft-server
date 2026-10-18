@@ -1,14 +1,15 @@
 package ssh
 
 import (
-	"archive/tar"
-	"compress/gzip"
 	"context"
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"time"
+
+	"archive/tar"
+	"compress/gzip"
+	"path/filepath"
 
 	gossh "golang.org/x/crypto/ssh"
 )
@@ -237,7 +238,7 @@ func writeTar(w io.Writer, dir string) error {
 		}
 		hdr.Name = rel
 
-		if err := tw.WriteHeader(hdr); err != nil {
+		if err = tw.WriteHeader(hdr); err != nil {
 			return err
 		}
 
@@ -286,13 +287,13 @@ func extractTar(r io.Reader, dir string) error {
 		target := filepath.Join(dir, hdr.Name)
 
 		if hdr.Typeflag == tar.TypeDir {
-			if err := os.MkdirAll(target, 0755); err != nil {
+			if err = os.MkdirAll(target, 0755); err != nil {
 				return err
 			}
 			continue
 		}
 
-		if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+		if err = os.MkdirAll(filepath.Dir(target), 0755); err != nil {
 			return err
 		}
 

@@ -1,9 +1,10 @@
 package state
 
 import (
-	"encoding/json"
 	"errors"
 	"os"
+
+	"encoding/json"
 	"path/filepath"
 )
 
@@ -17,9 +18,11 @@ type State struct {
 
 func Load(dir string) (*State, error) {
 	data, err := os.ReadFile(filepath.Join(dir, filename))
+
 	if errors.Is(err, os.ErrNotExist) {
 		return nil, nil
 	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -33,13 +36,16 @@ func Save(dir string, s *State) error {
 	if err != nil {
 		return err
 	}
+
 	return os.WriteFile(filepath.Join(dir, filename), data, 0644)
 }
 
 func Clear(dir string) error {
 	err := os.Remove(filepath.Join(dir, filename))
+
 	if errors.Is(err, os.ErrNotExist) {
 		return nil
 	}
+
 	return err
 }

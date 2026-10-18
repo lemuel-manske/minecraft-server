@@ -25,6 +25,7 @@ func (g *GitImpl) CommitBackup(tag string) error {
 
 	for _, c := range cmds {
 		out, err := exec.Command(c[0], c[1:]...).CombinedOutput()
+
 		if err != nil {
 			return fmt.Errorf("%v: %s", c, out)
 		}
@@ -59,6 +60,7 @@ func (g *GitImpl) Prune(keep int) error {
 
 	for _, tag := range tags[keep:] {
 		out, err := exec.Command("git", "-C", g.dir, "tag", "-d", tag).CombinedOutput()
+
 		if err != nil {
 			return fmt.Errorf("delete tag %s: %s", tag, out)
 		}

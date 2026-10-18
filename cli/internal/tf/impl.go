@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+
 	"os/exec"
 )
 
@@ -25,17 +26,21 @@ func (c *TFImpl) SetVerbose(v bool) {
 
 func (c *TFImpl) Apply(ctx context.Context, vars []string) error {
 	args := []string{"apply", "-auto-approve"}
+
 	for _, v := range vars {
 		args = append(args, "-var="+v)
 	}
+
 	return c.run(ctx, args...)
 }
 
 func (c *TFImpl) Destroy(ctx context.Context, vars []string) error {
 	args := []string{"destroy", "-auto-approve"}
+
 	for _, v := range vars {
 		args = append(args, "-var="+v)
 	}
+
 	return c.run(ctx, args...)
 }
 
@@ -67,6 +72,7 @@ func (c *TFImpl) run(ctx context.Context, args ...string) error {
 		if !c.verbose {
 			return fmt.Errorf("terraform %s: %s", args[0], stderr.String())
 		}
+
 		return fmt.Errorf("terraform %s failed", args[0])
 	}
 
