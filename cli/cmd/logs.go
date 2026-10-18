@@ -32,5 +32,5 @@ func runLogs(ctx context.Context, app *App, w io.Writer) error {
 	color.Cyan("Streaming logs from %s (Ctrl+C to stop)...\n", inst.PublicIP)
 
 	return app.NewSSH(inst.PublicIP, app.Config.KeyPath).
-		Stream("tail -f /home/ubuntu/mc/logs/latest.log", w)
+		Stream("tail -f /home/ubuntu/mc/base/logs/latest.log", w)
 }
