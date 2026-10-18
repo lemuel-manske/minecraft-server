@@ -17,28 +17,36 @@ profiles:
     world_dir: "${HOME}/mc/state/deceased_craft/world"
     backup_dir: ./backups/deceased_craft
     backup_keep: 10
-    forge_url: "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.20/forge-1.20.1-47.4.20-installer.jar"
-    forge_sha256: "0ebcf198609f925e0018842a79473ef74fda78534f86d82f2c0fdb26449c1fa4"
+    runtime:
+      type: forge
+      installer_url: "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.20/forge-1.20.1-47.4.20-installer.jar"
+      installer_sha256: "0ebcf198609f925e0018842a79473ef74fda78534f86d82f2c0fdb26449c1fa4"
 
   atm10:
+    java_version: 21
     modpack_dir: ./modpacks/atm10
     backup_dir: ./backups/atm10
     backup_keep: 10
-    forge_url: "https://maven.minecraftforge.net/net/minecraftforge/forge/1.21.1-52.1.0/forge-1.21.1-52.1.0-installer.jar"
-    forge_sha256: "f1b620f2879ad6a5bbe15daba4d8f81eab9f5e08004967604960b98996bdebc4"
+    runtime:
+      type: forge
+      installer_url: "https://maven.minecraftforge.net/net/minecraftforge/forge/1.21.1-52.1.0/forge-1.21.1-52.1.0-installer.jar"
+      installer_sha256: "f1b620f2879ad6a5bbe15daba4d8f81eab9f5e08004967604960b98996bdebc4"
 
   prominence2:
-    loader: fabric
-    minecraft_version: "1.20.1"
-    fabric_loader_version: "0.19.3"
+    runtime:
+      type: fabric
+      minecraft_version: "1.20.1"
+      version: "0.19.3"
     modpack_dir: ./modpacks/prominence2
     backup_dir: ./backups/prominence2
     backup_keep: 10
 
   dungeon_heroes:
-    loader: fabric
-    minecraft_version: "1.21.1"
-    fabric_loader_version: "0.19.3"
+    java_version: 21
+    runtime:
+      type: fabric
+      minecraft_version: "1.21.1"
+      version: "0.19.3"
     modpack_dir: ./modpacks/dungeon_heroes
     backup_dir: ./backups/dungeon_heroes
     backup_keep: 10
@@ -47,5 +55,7 @@ profiles:
     modpack_dir: ./modpacks/casket_of_reveries
     backup_dir: ./backups/casket_of_reveries
     backup_keep: 10
-    forge_url: "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.20/forge-1.20.1-47.4.20-installer.jar"
-    forge_sha256: "0ebcf198609f925e0018842a79473ef74fda78534f86d82f2c0fdb26449c1fa4"
+    runtime:
+      type: forge
+      installer_url: "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.20/forge-1.20.1-47.4.20-installer.jar"
+      installer_sha256: "0ebcf198609f925e0018842a79473ef74fda78534f86d82f2c0fdb26449c1fa4"
