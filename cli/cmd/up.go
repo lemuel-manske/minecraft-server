@@ -75,7 +75,7 @@ func runUp(ctx context.Context, app *App, profileName string, verbose bool) erro
 
 	s = newSpinner(" Uploading modpack...")
 	s.Start()
-	if err := sshClient.UploadTar(profile.ModpackDir, "/home/ubuntu/mc/pack"); err != nil {
+	if err := sshClient.UploadTar(profile.ModpackDir, "/home/ubuntu/mc/base"); err != nil {
 		s.Stop()
 		return fmt.Errorf("upload modpack: %w", err)
 	}
@@ -85,7 +85,7 @@ func runUp(ctx context.Context, app *App, profileName string, verbose bool) erro
 	props := filepath.Join(profile.ModpackDir, "server.properties")
 	s = newSpinner(" Uploading server config...")
 	s.Start()
-	if err := sshClient.UploadFile(props, "/home/ubuntu/mc/pack/server.properties"); err != nil {
+	if err := sshClient.UploadFile(props, "/home/ubuntu/mc/base/server.properties"); err != nil {
 		s.Stop()
 		return fmt.Errorf("upload server.properties: %w", err)
 	}
@@ -113,7 +113,7 @@ func newSpinner(suffix string) *spinner.Spinner {
 func buildTFVars(app *App, profileName string, profile config.Profile) []string {
 	loader := profile.Loader
 	if loader == "" {
-		loader = "forge"
+		loader = config.LoaderForge
 	}
 	quoted := make([]string, len(app.Config.AllowedCIDRs))
 	for i, c := range app.Config.AllowedCIDRs {
@@ -124,6 +124,7 @@ func buildTFVars(app *App, profileName string, profile config.Profile) []string 
 		"operator_cidr=" + app.Config.OperatorCIDR,
 		"allowed_cidrs=[" + strings.Join(quoted, ",") + "]",
 		"loader=" + loader,
+		"java_version=" + fmt.Sprint(profile.JavaVersion),
 		"minecraft_version=" + profile.MinecraftVersion,
 		"fabric_loader_version=" + profile.FabricLoaderVersion,
 		"forge_url=" + profile.ForgeURL,
