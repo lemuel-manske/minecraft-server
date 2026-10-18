@@ -26,6 +26,13 @@ make install
 mc --help
 ```
 
+#### 4. Up a server
+
+```bash
+make login
+mc up casket_of_reveries
+```
+
 ## How it works?
 
 ### Modpacks

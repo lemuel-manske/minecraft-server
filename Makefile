@@ -1,17 +1,35 @@
+ifneq (,$(wildcard .env))
+include .env
+export
+endif
+
+
+BIN_NAME ?= mc
+BIN_HOME ?= /usr/local/bin
+
+
 .PHONY: init build install test
+
+
+login:
+	aws login --remote
 
 init:
 	terraform -chdir=tf init
 
-test:
-	cd cli && go test ./...
-
-build:
-	cd cli && go build -o ../mc .
 
 fmt:
 	cd cli && go fmt ./...
 
+test:
+	cd cli && go test ./...
+
+check: fmt test
+
+
+build:
+	cd cli && go build -o ../$(BIN_NAME) .
+
 install: build
-	sudo cp mc /usr/local/bin/mc
-	rm mc
+	sudo cp $(BIN_NAME) $(BIN_HOME)/$(BIN_NAME)
+	rm $(BIN_NAME)
