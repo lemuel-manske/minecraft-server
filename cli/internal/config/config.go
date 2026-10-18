@@ -8,22 +8,22 @@ import (
 )
 
 const (
-	LoaderForge = "forge"
-	LoaderFabric = "fabric"
+	LoaderForge         = "forge"
+	LoaderFabric        = "fabric"
 	DefaultJavaVersion = 17
 )
 
 type LoaderConfig struct {
-	Type string `yaml:"type"`
-	MinecraftVersion string `yaml:"minecraft_version"`
-	Version string `yaml:"version"`
-	InstallerURL string `yaml:"installer_url"`
-	InstallerSHA256 string `yaml:"installer_sha256"`
+	Type              string `yaml:"type"`
+	MinecraftVersion  string `yaml:"minecraft_version"`
+	Version           string `yaml:"version"`
+	InstallerURL      string `yaml:"installer_url"`
+	InstallerSHA256   string `yaml:"installer_sha256"`
 }
 
 type Profile struct {
-	JavaVersion int `yaml:"java_version"`
-	Runtime LoaderConfig `yaml:"runtime"`
+	JavaVersion         int          `yaml:"java_version"`
+	Runtime             LoaderConfig `yaml:"runtime"`
 	ModpackDir          string `yaml:"modpack_dir"`
 	WorldDir            string `yaml:"world_dir"`
 	BackupDir           string `yaml:"backup_dir"`
@@ -74,7 +74,11 @@ func (c *Config) GetProfile(name string) (Profile, error) {
 		p.ForgeURL = p.Runtime.InstallerURL
 		p.ForgeSHA256 = p.Runtime.InstallerSHA256
 	}
-	if p.Loader == "" { p.Loader = LoaderForge }
-	if p.JavaVersion == 0 { p.JavaVersion = DefaultJavaVersion }
+	if p.Loader == "" {
+		p.Loader = LoaderForge
+	}
+	if p.JavaVersion == 0 {
+		p.JavaVersion = DefaultJavaVersion
+	}
 	return p, nil
 }
