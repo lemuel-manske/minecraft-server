@@ -48,6 +48,7 @@ resource "aws_instance" "mc" {
   }
 
   user_data = templatefile("setup.sh.tftpl", {
+    java_version          = var.java_version
     loader                = var.loader
     minecraft_version     = var.minecraft_version
     fabric_loader_version = var.fabric_loader_version
