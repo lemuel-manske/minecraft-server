@@ -3,11 +3,11 @@ exec > /var/log/setup.log 2>&1
 set -euxo pipefail
 
 apt-get update
-apt-get install -y openjdk-17-jdk wget unzip tmux
+apt-get install -y openjdk-${java_version}-jdk wget unzip tmux
 
 BASE="/home/ubuntu/mc"
 
-mkdir -p "$BASE/base" "$BASE/pack" \
+mkdir -p "$BASE/base" "$BASE/bin" \
   "$BASE/state/world" \
   "$BASE/state/config" \
   "$BASE/state/serverconfig" \
@@ -36,17 +36,9 @@ case "${loader}" in
 esac
 
 echo "eula=true" > eula.txt
-ln -sfn ../pack/server.properties "$BASE/base/server.properties"
+ln -sfn ../state/world "$BASE/base/world"
 
-ln -sfn ../pack/mods "$BASE/base/mods"
-ln -sfn ../state/world        "$BASE/base/world"
-ln -sfn ../pack/config       "$BASE/base/config"
-ln -sfn ../pack/serverconfig "$BASE/base/serverconfig"
-ln -sfn ../pack/kubejs       "$BASE/base/kubejs"
-ln -sfn ../pack/customnpcs   "$BASE/base/customnpcs"
-ln -sfn ../pack/ftbquests    "$BASE/base/ftbquests"
-
-cat > "$BASE/start.sh" <<'STARTSCRIPT'
+cat > "$BASE/bin/start.sh" <<'STARTSCRIPT'
 #!/bin/bash
 if ! tmux has-session -t mc 2>/dev/null; then
   if [ -f /home/ubuntu/mc/base/fabric-server-launch.jar ]; then
@@ -58,16 +50,16 @@ fi
 tail -f /dev/null
 STARTSCRIPT
 
-chmod +x "$BASE/start.sh"
+chmod +x "$BASE/bin/start.sh"
 
-cat > "$BASE/mc-stop.sh" <<'STOPSCRIPT'
+cat > "$BASE/bin/mc-stop.sh" <<'STOPSCRIPT'
 #!/bin/bash
 /usr/bin/tmux send-keys -t mc "save-all" C-m
 sleep 10
 /usr/bin/tmux send-keys -t mc "stop" C-m
 STOPSCRIPT
 
-chmod +x "$BASE/mc-stop.sh"
+chmod +x "$BASE/bin/mc-stop.sh"
 
 cat > /etc/systemd/system/minecraft.service <<'UNIT'
 [Unit]
@@ -78,8 +70,8 @@ After=network.target
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/mc/base
-ExecStart=/home/ubuntu/mc/start.sh
-ExecStop=/home/ubuntu/mc/mc-stop.sh
+ExecStart=/home/ubuntu/mc/bin/start.sh
+ExecStop=/home/ubuntu/mc/bin/mc-stop.sh
 Restart=on-failure
 RestartSec=10
 
